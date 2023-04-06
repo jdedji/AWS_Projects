@@ -1,31 +1,23 @@
-# PROJECT-16-AUTOMATE-INFRASTRUCTURE-WITH-IAC-USING-TERRAFORM-PART-1
 
-
-# AUTOMATE INFRASTRUCTURE WITH IAC USING TERRAFORM PART 1
-
-After you have built AWS infrastructure for 2 websites manually, it is time to automate the process using Terraform.
-
-Let us start building the same set up with the power of Infrastructure as Code (IaC)
+# AUTOMATE INFRASTRUCTURE WITH IAC USING TERRAFORM
 
 ![tooling_project_16](https://user-images.githubusercontent.com/10243139/137618206-499335c6-0bef-4e15-b102-b2130cb0521e.png)
 
-### Prerequisites before you begin writing Terraform code
+### Prerequisites before I begin writing Terraform code
 
-- You must have completed Terraform course from the Learning dashboard
-
-- Create an IAM user, name it terraform (ensure that the user has only programatic access to your AWS account) and grant this user AdministratorAccess permissions.
+- Create an IAM user, name it terraform (I ensure that the user has only programatic access to my AWS account) and grant this user AdministratorAccess permissions.
 
 - Copy the secret access key and access key ID. Save them in a notepad temporarily.
 
-- Configure programmatic access from your workstation to connect to AWS using the access keys copied above and a Python SDK (boto3). You must have Python 3.6 or higher on your workstation.
+- Configure programmatic access from my workstation to connect to AWS using the access keys copied above and a Python SDK (boto3). I must have Python 3.6 or higher on your workstation.
 
 ![P4](https://user-images.githubusercontent.com/10243139/137618211-31df33e2-8caa-4e39-b0a7-a66a114d6d66.png)
 
-- Create an S3 bucket to store Terraform state file. You can name it something like yourname-dev-terraform-bucket
+- Create an S3 bucket to store Terraform state file. (dev-terraform-bucket)
 
 ![P5](https://user-images.githubusercontent.com/10243139/137618228-26d6b027-4935-4281-9755-d746978ac315.png)
 
-- When you have configured authentication and installed boto3, make sure you can programmatically access your AWS account by running following commands in python:
+- When I have configured authentication and installed boto3, I make sure I can programmatically access my AWS account by running following commands in python:
 
         import boto3
         s3 = boto3.resource('s3')
@@ -37,23 +29,22 @@ Let us start building the same set up with the power of Infrastructure as Code (
 
 ## Part 1 – VPC | Subnets | Security Groups
 
-### Let us create a directory structure
+### directory structure
 
-Open your Visual Studio Code and:
+I Open my Visual Studio Code and:
 
 - Create a folder called PBL
 
 - Create a file in the folder, name it main.tf
 
-Your setup should look like this:
 
 ![1b](https://user-images.githubusercontent.com/10243139/137618298-68d92f18-26d3-4222-b4e4-8d54e641be39.png)
 
-Set up Terraform CLI as per this instruction below.
+Set up of Terraform CLI:
 
 - Add AWS as a provider, and a resource to create a VPC in the main.tf file.
 
-- Provider block informs Terraform that we intend to build infrastructure within AWS.
+- Provider block informs Terraform that I intend to build infrastructure within AWS.
 
 - Resource block will create a VPC.
 
@@ -72,32 +63,32 @@ Set up Terraform CLI as per this instruction below.
 
 ![1c](https://user-images.githubusercontent.com/10243139/137618332-7144a484-485a-4f23-99f3-a870734b9a72.png)
 
-The next thing is to download necessary plugins for Terraform to work. Lets accomplish this with terraform init command as seen in the below demonstration.
+The next thing is to download necessary plugins for Terraform to work. I accomplish this with terraform init command as seen in the below demonstration.
 
 ![1d](https://user-images.githubusercontent.com/10243139/137618349-cda7d5f4-af5f-4323-9374-3138c9d63560.png)
 
-Next, let us create the only resource we just defined: aws_vpc.
+Next, I create the only resource I just defined: aws_vpc.
 
-Run terraform plan
+Terraform plan
 
 ![1e1](https://user-images.githubusercontent.com/10243139/137618371-19b411b0-c510-451b-a084-584db3994df2.png)
 
-Then, if you are happy with changes planned, execute terraform apply
+Then, if Im happy with changes planned, I execute terraform apply
 
 ![1e2](https://user-images.githubusercontent.com/10243139/137618381-cb8faa6b-b8ae-40a2-99a7-3f4afdfc8000.png)
 
 
 ## Part 2 – Subnets resource section
 
-According to our architectural design, we require 6 subnets:
+According to my architectural design, I require 6 subnets:
 
 - 2 public
 - 2 private for webservers
 - 2 private for data layer
 
-Let us create the first 2 public subnets.
+I create the first 2 public subnets.
 
-Add below configuration to the main.tf file:
+I Add below configuration to the main.tf file:
 
         # Create public subnets1
             resource "aws_subnet" "public1" {
@@ -123,9 +114,9 @@ Add below configuration to the main.tf file:
         }
         }
 
-We are creating 2 subnets, therefore declaring 2 resource blocks – one for each of the subnets.
+I will be creating 2 subnets, therefore declaring 2 resource blocks – one for each of the subnets.
 
-To execute the command and see results, run the following command:
+To execute the command and see results, I run the following command:
 
         Run terraform plan 
 
@@ -138,7 +129,7 @@ To execute the command and see results, run the following command:
 
 ## Part 3 – Fixing The Problems By Code Refactoring
 
-In this part, we will introduce variables and remove hard coding.
+In this part, I will introduce variables and remove hard coding.
 
 Starting with the provider block, declare a variable named region, give it a default value, and update the provider section by referring to the declared variable.
 
@@ -198,14 +189,14 @@ Do the same to cidr value in the vpc block, and all the other arguments.
 
 Terraform has a functionality that allows us to pull data which exposes information to us. 
 
-Let us fetch Availability zones from AWS, and replace the hard coded value in the subnet’s availability_zone section.
+Fetching Availability zones from AWS, and replace the hard coded value in the subnet’s availability_zone section.
 
         # Get list of availability zones
         data "aws_availability_zones" "available" {
         state = "available"
         }
 
-To make use of this new data resource, we will need to introduce a count argument in the subnet block: Something like this.
+To make use of this new data resource, I will need to introduce a count argument in the subnet block: Something like this.
 
     # Create public subnet1
     resource "aws_subnet" "public" { 
@@ -383,9 +374,9 @@ Now your entire configuration should now look like this
 
 ## Part 4 – Introducing variables.tf & terraform.tfvars
 
-Instead of having a long list of variables in main.tf file, we can actually make our code a lot more readable and better structured by moving out some parts of the configuration content to other files.
+Instead of having a long list of variables in main.tf file, I can actually make our code a lot more readable and better structured by moving out some parts of the configuration content to other files.
 
-We will put all variable declarations in a separate file and provide non default values to each of them
+I will put all variable declarations in a separate file and provide non default values to each of them
 
 - Create a new file and name it variables.tf
 - Copy all the variable declarations into the new file.
@@ -496,7 +487,7 @@ You should also have this file structure in the PBL folder.
             ├── terraform.tfvars
             └── variables.tf
 
-Run terraform plan and apply to ensure everything works
+I then Run terraform plan and apply to ensure everything works
 
 ![4 1](https://user-images.githubusercontent.com/10243139/137619749-aa3e5398-730c-4220-8d6f-3f9fa046f2da.png)
 ![4 2](https://user-images.githubusercontent.com/10243139/137619756-17867c91-a64c-4589-bdfb-20d927496114.png)
