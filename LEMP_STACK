@@ -475,8 +475,4 @@ You should see a page like this, showing the content you’ve inserted in your t
 ![image](https://user-images.githubusercontent.com/85270361/126221158-23f22489-e0a5-4bc4-8d53-a587b925dc12.png)
 
 
-That means your PHP environment is ready to connect and interact with your MySQL server.
-
-Congratulations!
-
-In this guide, we have built a flexible foundation for serving PHP websites and applications to your visitors, using Nginx as web server and MySQL as database management system.
+ I have built a flexible foundation for serving PHP websites and applications to my visitors, using Nginx as web server and MySQL as database management system.
